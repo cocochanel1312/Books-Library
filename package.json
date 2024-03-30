@@ -9,18 +9,16 @@
     "build": "rollup -c"
   },
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/AlariCode/8-javascript-advanced-1.git"
+    "type": "git"
   },
   "keywords": [
     "books"
   ],
-  "author": "Anton Larichev",
+  "author": "Konstantin Chanel",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/AlariCode/8-javascript-advanced-1/issues"
   },
-  "homepage": "https://purpleschool.ru",
+  "homepage": "https://vk.com/chanel1312",
   "devDependencies": {
     "@rollup/plugin-node-resolve": "15.0.1",
     "eslint": "8.33.0",
