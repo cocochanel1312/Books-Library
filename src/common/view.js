@@ -1,4 +1,4 @@
-// Класс с методом рендер методом дестрой нашей View
+//Родительский класс с методом рендер и методом дестрой нашей View
 
 export class AbstractView {
     constructor() {
@@ -8,7 +8,6 @@ export class AbstractView {
     setTitle(title) {
         document.title = title;
     }
-
     render() {
         return;
     }

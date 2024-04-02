@@ -16,8 +16,7 @@
   ],
   "author": "Konstantin Chanel",
   "license": "ISC",
-  "bugs": {
-  },
+  "bugs": {},
   "homepage": "https://vk.com/chanel1312",
   "devDependencies": {
     "@rollup/plugin-node-resolve": "15.0.1",
