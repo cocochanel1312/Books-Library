@@ -1016,6 +1016,35 @@
     onChange.target = proxy => (proxy && proxy[TARGET]) || proxy;
     onChange.unsubscribe = proxy => proxy[UNSUBSCRIBE] || proxy;
 
+    class DivComponent {
+        constructor() {
+            this.el = document.createElement('div');
+        }
+
+        render() {
+            this.el;
+        }
+    }
+
+    class Header extends DivComponent {
+        constructor(appState) {
+            super();
+            this.appState = appState;
+        }
+
+    // Верстка header
+        render() {
+            this.el.innerHTML = '';
+            this.el.classList.add('header');
+            this.el.innerHTML = `
+            <div>
+                <img src="/static/Logo.svg" alt="Логотип" />
+            </div>
+        `;
+            return this.el;
+        }
+    }
+
     // mainView унаслдедует родительский класс AbstractView
     // Главная страница
     class MainView extends AbstractView {
@@ -1041,10 +1070,15 @@
 
         render() {
             const main = document.createElement('div');
-            main.innerHTML = `Число книг: ${this.appState.favorites.length}`;
             this.app.innerHTML = '';
             this.app.append(main);
+            this.renderHeader();
             this.appState.favorites.push('d');
+        }
+
+        renderHeader () {
+            const header = new Header(this.appState).render();
+            this.app.prepend(header);
         }
     }
 
