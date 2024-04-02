@@ -1016,6 +1016,8 @@
     onChange.target = proxy => (proxy && proxy[TARGET]) || proxy;
     onChange.unsubscribe = proxy => proxy[UNSUBSCRIBE] || proxy;
 
+    // Паттерн на то, как мы будет создавать компоненты div
+
     class DivComponent {
         constructor() {
             this.el = document.createElement('div');
@@ -1035,8 +1037,8 @@
     // Верстка header
         render() {
             this.el.innerHTML = '';
-            this.el.classList.add('header');
-            this.el.innerHTML = `
+            this.el.classList.add('header'); // задали дефольный класс компоненту 'header'
+            this.el.innerHTML = ` 
             <div>
                 <img src="/static/Logo.svg" alt="Логотип" />
             </div>
@@ -1067,15 +1069,16 @@
                 console.log(path);
             }
         }
-
+        
+        // Отображение 
         render() {
             const main = document.createElement('div');
             this.app.innerHTML = '';
             this.app.append(main);
             this.renderHeader();
-            this.appState.favorites.push('d');
         }
-
+        
+        // Используем для рендера исключительно renderHeader
         renderHeader () {
             const header = new Header(this.appState).render();
             this.app.prepend(header);

@@ -9,8 +9,8 @@ export class Header extends DivComponent {
 // Верстка header
     render() {
         this.el.innerHTML = '';
-        this.el.classList.add('header');
-        this.el.innerHTML = `
+        this.el.classList.add('header'); // задали дефольный класс компоненту 'header'
+        this.el.innerHTML = ` 
             <div>
                 <img src="/static/Logo.svg" alt="Логотип" />
             </div>

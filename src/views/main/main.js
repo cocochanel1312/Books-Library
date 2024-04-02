@@ -24,15 +24,16 @@ export class MainView extends AbstractView {
             console.log(path);
         }
     }
-
+    
+    // Отображение 
     render() {
         const main = document.createElement('div');
         this.app.innerHTML = '';
         this.app.append(main);
         this.renderHeader();
-        this.appState.favorites.push('d');
     }
-
+    
+    // Используем для рендера исключительно renderHeader
     renderHeader () {
         const header = new Header(this.appState).render();
         this.app.prepend(header);
