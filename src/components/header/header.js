@@ -9,7 +9,6 @@ export class Header extends DivComponent {
 
 // Верстка header
     render() {
-        this.el.innerHTML = '';
         this.el.classList.add('header'); // задали дефольный класс компоненту 'header'
         this.el.innerHTML = ` 
             <div>
@@ -17,7 +16,7 @@ export class Header extends DivComponent {
             </div>
             <div class="menu">
                 <a class="menu__item" href="#">
-                    <img src="/static/SearchLogo.svg" alt="Иконка посика"/>
+                    <img src="/static/SearchLogo.svg" alt="Иконка поиска"/>
                     Поиск книг
                 </a>
                 <a class="menu__item" href="#Favorites">

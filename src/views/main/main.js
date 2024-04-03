@@ -1,6 +1,7 @@
 import { AbstractView } from "../../common/view.js";
 import onChange from "on-change";
 import { Header } from "../../components/header/header.js";
+import { Search } from "../../components/search/search.js";
 
 // mainView унаслдедует родительский класс AbstractView
 // Главная страница
@@ -28,6 +29,7 @@ export class MainView extends AbstractView {
     // Отображение 
     render() {
         const main = document.createElement('div');
+        main.append(new Search(this.state).render()); // Добавили наш поисковик, а также передали лоакльное состояние state и вызвали его
         this.app.innerHTML = '';
         this.app.append(main);
         this.renderHeader();
