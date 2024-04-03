@@ -1,0 +1,24 @@
+
+/* Изменили шрифт глобально в бади */
+body {
+    font-family: "Open Sans", sans-serif;
+    color: var(--black);
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+    font-variation-settings:
+        "wdth" 100;
+
+}
+
+/* Задали кастомные свойства, для хранения цветов глобально */
+:root {
+    --black: #121212;
+    --white: #fafafa;
+}
+
+/* Задали свойства, нашего id root */
+#root {
+    max-width: 800px;
+    margin: 0 auto;
+}

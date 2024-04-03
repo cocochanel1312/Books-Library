@@ -1,4 +1,5 @@
 import { DivComponent } from "../../common/div-component.js";
+import './header.css'
 
 export class Header extends DivComponent {
     constructor(appState) {
@@ -19,7 +20,7 @@ export class Header extends DivComponent {
                     <img src="/static/SearchLogo.svg" alt="Иконка посика"/>
                     Поиск книг
                 </a>
-                <a class="menu__item" href="#">
+                <a class="menu__item" href="#Favorites">
                     <img src="/static/FavoriteLogo.svg" alt="Иконка избранного"/>
                     Избранные книги
                     <div class="menu__counter">
