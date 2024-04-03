@@ -1048,9 +1048,12 @@
                     Поиск книг
                 </a>
                 <a class="menu__item" href="#">
-                <img src="/static/FavoriteLogo.svg" alt="Иконка избранного"/>
-                Избранные книги
-            </a>
+                    <img src="/static/FavoriteLogo.svg" alt="Иконка избранного"/>
+                    Избранные книги
+                    <div class="menu__counter">
+                        ${this.appState.favorites.length}
+                    </div>
+                </a>
             </div>
         `;
             return this.el;
