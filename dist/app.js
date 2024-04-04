@@ -1097,6 +1097,31 @@
         }
     }
 
+    //Создание списка карточек для отображения
+    class CardList extends DivComponent {
+        constructor(appState, parentState) { 
+            super();
+            this.appStatestate = appState; // Используем для обновления состояния "Избранное"
+            this.parentState = parentState; // Используется для состояния "Загрузка"
+        }
+
+
+    // Верстка списка и загрузки на странице
+        render() {
+            if (this.parentState.loading) { // Проверка на состояние "Загрузка"
+                this.el.innerHTML = `<div class="card_list__loader">
+                <img src="/static/Enot.gif" alt="Иконка загрузки"/>
+            </div>`;
+                return this.el;
+            }
+            this.el.classList.add('card_list');
+            this.el.innerHTML = `
+            <h1> Найдено книг - ${this.parentState.list.length}</h1>
+        `;
+            return this.el;
+        }
+    }
+
     // mainView унаслдедует родительский класс AbstractView
     // Главная страница
     class MainView extends AbstractView {
@@ -1128,6 +1153,9 @@
                 this.state.loading = false;
                 this.state.list = data.docs;
             }
+            if(path === 'loading' || path === 'list') {
+                this.render();
+            }
         }
 
         async loadList(q, offset) { // Загрузчик книг
@@ -1139,6 +1167,7 @@
         render() {
             const main = document.createElement('div');
             main.append(new Search(this.state).render()); // Добавили наш поисковик, а также передали лоакльное состояние state и вызвали его
+            main.append(new CardList(this.appState, this.state).render());
             this.app.innerHTML = '';
             this.app.append(main);
             this.renderHeader();
