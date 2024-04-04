@@ -1065,6 +1065,11 @@
             this.state = state;
         }
 
+        search() {
+            const value = this.el.querySelector('input').value;
+            this.state.searchQuery = value;
+        }
+
     // Верстка поисковика на странице
         render() {
             this.el.classList.add('search'); // задали дефольный класс компоненту 'search'
@@ -1082,6 +1087,12 @@
                 <img src="/static/SearchLogo2.svg" alt="Иконка поиска 2"/>
             </button
         `; // В value указали, в случае елси searchQuery имеет значение, оно его выводит, если нет, то получаем пустое значение
+            this.el.querySelector('button').addEventListener('click', this.search.bind(this)); // Повесили ивент на нажатие кнопки поиска
+            this.el.querySelector('input').addEventListener('keydown', (event) => { // Повесили ивент на нажатие на кнопку энтер
+                if (event.code === 'Enter') {
+                    this.search();
+                }
+            });
             return this.el;
         }
     }
@@ -1093,13 +1104,14 @@
             list: [],
             loading: false,
             searchQuery: undefined,
-            offset: 0
+            offset: 0 
         }
 
         constructor(appState) {
             super(); // метод super() вызывает родительский конструктор
             this.appState = appState;
-            this.appState = onChange(this.appState, this.appStateHook.bind(this)); // Подписались на обновление state
+            this.appState = onChange(this.appState, this.appStateHook.bind(this)); // Подписались на глобальное обновление appstate (избранное)
+            this.state = onChange(this.state, this.stateHook.bind(this)); // Подписались на локальное обновление state (поисковик)
             this.setTitle('Поиск книг');
         }
 
@@ -1107,6 +1119,20 @@
             if(path === 'favorites') {
                 console.log(path);
             }
+        }
+
+        async stateHook(path) { // реактивность для поисковика
+            if(path === 'searchQuery') {
+                this.state.loading = true;
+                const data = await this.loadList(this.state.searchQuery, this.state.offset);
+                this.state.loading = false;
+                this.state.list = data.docs;
+            }
+        }
+
+        async loadList(q, offset) { // Загрузчик книг
+            const res = await fetch (`https://openlibrary.org/search.json?q=${q}&offset=${offset}`);
+            return res.json();
         }
         
         // Отображение 
