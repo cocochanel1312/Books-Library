@@ -10,12 +10,22 @@ export class Card extends DivComponent {
         this.cardState = cardState; // Состояние карточки
     }
 
+#addToFavorites() { // функция на добавление в избранное
+    this.appState.favorites.push(this.cardState);
+}
+
+#deleteFromFavorites() { // функция на удаление из избранного
+    this.appState.favorites = this.appState.favorites.filter(
+        book => book.key != this.cardState.key
+    );
+}
+
 
 // Верстка карточки
     render() {
         this.el.classList.add('card');
         const existInFavorites = this.appState.favorites.find(
-            b => b.key == this.cardState.key
+            book => book.key == this.cardState.key
         );
         this.el.innerHTML = `
         <div class="card__image">
@@ -40,7 +50,16 @@ export class Card extends DivComponent {
                 </button>
             </div>
         </div>
-        `
+        `;
+        if (existInFavorites) { // Повесили условие на кнопку добавление-удаление из избранного
+            this.el 
+                .querySelector('button')
+                .addEventListener('click', this.#deleteFromFavorites.bind(this)) // добавили ивент на кнопку удалении из избранного
+        } else {
+            this.el
+                .querySelector('button')
+                .addEventListener('click', this.#addToFavorites.bind(this)) // добавили ивент на кнопку добавление в избранное
+        }
         return this.el;
     }
 }

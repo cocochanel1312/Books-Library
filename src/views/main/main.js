@@ -18,14 +18,14 @@ export class MainView extends AbstractView {
     constructor(appState) {
         super(); // метод super() вызывает родительский конструктор
         this.appState = appState;
-        this.appState = onChange(this.appState, this.appStateHook.bind(this)); // Подписались на глобальное обновление appstate (избранное)
+        this.appState = onChange(this.appState, this.appStateHook.bind(this)); // Подписались на глобальное обновление appState (избранное)
         this.state = onChange(this.state, this.stateHook.bind(this)); // Подписались на локальное обновление state (поисковик)
         this.setTitle('Поиск книг');
     }
 
-    appStateHook(path) { // Путь обновления state
+    appStateHook(path) { // Обновление списка избранного
         if(path === 'favorites') {
-            console.log(path);
+            this.render()
         }
     }
 
@@ -34,7 +34,6 @@ export class MainView extends AbstractView {
             this.state.loading = true;
             const data = await this.loadList(this.state.searchQuery, this.state.offset);
             this.state.loading = false;
-            console.log(data);
             this.state.numFound = data.numFound;
             this.state.list = data.docs
         }

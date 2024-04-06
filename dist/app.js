@@ -1105,12 +1105,22 @@
             this.cardState = cardState; // Состояние карточки
         }
 
+    #addToFavorites() { // функция на добавление в избранное
+        this.appState.favorites.push(this.cardState);
+    }
+
+    #deleteFromFavorites() { // функция на удаление из избранного
+        this.appState.favorites = this.appState.favorites.filter(
+            book => book.key != this.cardState.key
+        );
+    }
+
 
     // Верстка карточки
         render() {
             this.el.classList.add('card');
             const existInFavorites = this.appState.favorites.find(
-                b => b.key == this.cardState.key
+                book => book.key == this.cardState.key
             );
             this.el.innerHTML = `
         <div class="card__image">
@@ -1136,6 +1146,15 @@
             </div>
         </div>
         `;
+            if (existInFavorites) { // Повесили условие на кнопку добавление-удаление из избранного
+                this.el 
+                    .querySelector('button')
+                    .addEventListener('click', this.#deleteFromFavorites.bind(this)); // добавили ивент на кнопку удалении из избранного
+            } else {
+                this.el
+                    .querySelector('button')
+                    .addEventListener('click', this.#addToFavorites.bind(this)); // добавили ивент на кнопку добавление в избранное
+            }
             return this.el;
         }
     }
@@ -1182,14 +1201,14 @@
         constructor(appState) {
             super(); // метод super() вызывает родительский конструктор
             this.appState = appState;
-            this.appState = onChange(this.appState, this.appStateHook.bind(this)); // Подписались на глобальное обновление appstate (избранное)
+            this.appState = onChange(this.appState, this.appStateHook.bind(this)); // Подписались на глобальное обновление appState (избранное)
             this.state = onChange(this.state, this.stateHook.bind(this)); // Подписались на локальное обновление state (поисковик)
             this.setTitle('Поиск книг');
         }
 
-        appStateHook(path) { // Путь обновления state
+        appStateHook(path) { // Обновление списка избранного
             if(path === 'favorites') {
-                console.log(path);
+                this.render();
             }
         }
 
@@ -1198,7 +1217,6 @@
                 this.state.loading = true;
                 const data = await this.loadList(this.state.searchQuery, this.state.offset);
                 this.state.loading = false;
-                console.log(data);
                 this.state.numFound = data.numFound;
                 this.state.list = data.docs;
             }
