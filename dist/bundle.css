@@ -152,3 +152,9 @@
     height: 600px;
     width: 100%;
 }
+
+.card__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
