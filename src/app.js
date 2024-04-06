@@ -1,9 +1,11 @@
+import { FavoritesView } from "./views/favorites/favorites";
 import { MainView } from "./views/main/main";
 
 // App отвечает за роутинг, чтобы загрузить правильную view
 class App {
     routes = [
-        {path: "", view: MainView} // путь и ссылка на наш view
+        {path: "", view: MainView}, // путь и ссылка на нашу MainView
+        {path: "#favorites", view: FavoritesView}, // путь и ссылка на нашу FavoritesView
     ];
     appState = { //Глобальный state, который работает с favorites
         favorites: []

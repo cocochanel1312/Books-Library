@@ -1046,7 +1046,7 @@
                     <img src="/static/SearchLogo.svg" alt="Иконка поиска"/>
                     Поиск книг
                 </a>
-                <a class="menu__item" href="#Favorites">
+                <a class="menu__item" href="#favorites">
                     <img src="/static/FavoriteLogo.svg" alt="Иконка избранного"/>
                     Избранные книги
                     <div class="menu__counter">
@@ -1055,44 +1055,6 @@
                 </a>
             </div>
         `;
-            return this.el;
-        }
-    }
-
-    class Search extends DivComponent {
-        constructor(state) { // Создали state для поисковика, который при запросе в поиске обновит состояние страницы
-            super();
-            this.state = state;
-        }
-
-        search() {
-            const value = this.el.querySelector('input').value;
-            this.state.searchQuery = value;
-        }
-
-    // Верстка поисковика на странице
-        render() {
-            this.el.classList.add('search'); // задали дефольный класс компоненту 'search'
-            this.el.innerHTML = ` 
-            <div class="search__wrapper">
-                <input 
-                    type="text" 
-                    placeholder="Найти книгу или автора..."
-                    class="search__input"
-                    value="${this.state.searchQuery ? this.state.searchQuery : ''}"
-                />
-                <img src="/static/SearchLogo.svg" alt="Иконка поиска"/>
-            </div> 
-            <button aria-label="Искать"> 
-                <img src="/static/SearchLogo2.svg" alt="Иконка поиска 2"/>
-            </button
-        `; // В value указали, в случае елси searchQuery имеет значение, оно его выводит, если нет, то получаем пустое значение
-            this.el.querySelector('button').addEventListener('click', this.search.bind(this)); // Повесили ивент на нажатие кнопки поиска
-            this.el.querySelector('input').addEventListener('keydown', (event) => { // Повесили ивент на нажатие на кнопку энтер
-                if (event.code === 'Enter') {
-                    this.search();
-                }
-            });
             return this.el;
         }
     }
@@ -1176,15 +1138,88 @@
             </div>`;
                 return this.el;
             }
-            this.el.innerHTML = `
-            <h1> Найдено книг - ${this.parentState.numFound}</h1>
-        `;
             const cardGrid = document.createElement('div');
             cardGrid.classList.add('card__grid');
             this.el.append(cardGrid);
             for (const card of this.parentState.list) {
                 cardGrid.append(new Card(this.appState, card).render());
             }
+            return this.el;
+        }
+    }
+
+    // Страница с избранным
+    class FavoritesView extends AbstractView {
+        constructor(appState) {
+            super(); // метод super() вызывает родительский конструктор
+            this.appState = appState;
+            this.appState = onChange(this.appState, this.appStateHook.bind(this)); // Подписались на глобальное обновление appState (избранное)
+            this.setTitle('Мои книги');
+        }
+
+        destroy() { // метод destroy позволяет отписаться от обновления состояния объекта
+            onChange.unsubscribe(this.appState);
+        }
+
+        appStateHook(path) { // Обновление списка избранного
+            if(path === 'favorites') {
+                this.render();
+            }
+        }
+
+        // Отображение 
+        render() {
+            const favorites = document.createElement('div');
+            favorites.innerHTML = `
+            <h1> Избранные книги </h1>
+        `;
+            favorites.append(new CardList(this.appState, {list: this.appState.favorites}).render());
+            this.app.innerHTML = '';
+            this.app.append(favorites);
+            this.renderHeader();
+        }
+        
+        // Используем для рендера исключительно renderHeader
+        renderHeader () {
+            const header = new Header(this.appState).render();
+            this.app.prepend(header);
+        }
+    }
+
+    class Search extends DivComponent {
+        constructor(state) { // Создали state для поисковика, который при запросе в поиске обновит состояние страницы
+            super();
+            this.state = state;
+        }
+
+        search() {
+            const value = this.el.querySelector('input').value;
+            this.state.searchQuery = value;
+        }
+
+    // Верстка поисковика на странице
+        render() {
+            this.el.classList.add('search'); // задали дефольный класс компоненту 'search'
+            this.el.innerHTML = ` 
+            <div class="search__wrapper">
+                <input 
+                    type="text" 
+                    placeholder="Найти книгу или автора..."
+                    class="search__input"
+                    value="${this.state.searchQuery ? this.state.searchQuery : ''}"
+                />
+                <img src="/static/SearchLogo.svg" alt="Иконка поиска"/>
+            </div> 
+            <button aria-label="Искать"> 
+                <img src="/static/SearchLogo2.svg" alt="Иконка поиска 2"/>
+            </button
+        `; // В value указали, в случае елси searchQuery имеет значение, оно его выводит, если нет, то получаем пустое значение
+            this.el.querySelector('button').addEventListener('click', this.search.bind(this)); // Повесили ивент на нажатие кнопки поиска
+            this.el.querySelector('input').addEventListener('keydown', (event) => { // Повесили ивент на нажатие на кнопку энтер
+                if (event.code === 'Enter') {
+                    this.search();
+                }
+            });
             return this.el;
         }
     }
@@ -1206,6 +1241,11 @@
             this.appState = onChange(this.appState, this.appStateHook.bind(this)); // Подписались на глобальное обновление appState (избранное)
             this.state = onChange(this.state, this.stateHook.bind(this)); // Подписались на локальное обновление state (поисковик)
             this.setTitle('Поиск книг');
+        }
+
+        destroy() { // метод destroy позволяет отписаться от обновления состояния объекта
+            onChange.unsubscribe(this.appState);
+            onChange.unsubscribe(this.state);
         }
 
         appStateHook(path) { // Обновление списка избранного
@@ -1235,6 +1275,9 @@
         // Отображение 
         render() {
             const main = document.createElement('div');
+            main.innerHTML = `
+            <h1> Найдено книг - ${this.state.numFound}</h1>
+        `;
             main.append(new Search(this.state).render()); // Добавили наш поисковик, а также передали лоакльное состояние state и вызвали его
             main.append(new CardList(this.appState, this.state).render());
             this.app.innerHTML = '';
@@ -1252,7 +1295,8 @@
     // App отвечает за роутинг, чтобы загрузить правильную view
     class App {
         routes = [
-            {path: "", view: MainView} // путь и ссылка на наш view
+            {path: "", view: MainView}, // путь и ссылка на нашу MainView
+            {path: "#favorites", view: FavoritesView}, // путь и ссылка на нашу FavoritesView
         ];
         appState = { //Глобальный state, который работает с favorites
             favorites: []

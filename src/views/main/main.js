@@ -23,6 +23,11 @@ export class MainView extends AbstractView {
         this.setTitle('Поиск книг');
     }
 
+    destroy() { // метод destroy позволяет отписаться от обновления состояния объекта
+        onChange.unsubscribe(this.appState);
+        onChange.unsubscribe(this.state);
+    }
+
     appStateHook(path) { // Обновление списка избранного
         if(path === 'favorites') {
             this.render()
@@ -50,6 +55,9 @@ export class MainView extends AbstractView {
     // Отображение 
     render() {
         const main = document.createElement('div');
+        main.innerHTML = `
+            <h1> Найдено книг - ${this.state.numFound}</h1>
+        `
         main.append(new Search(this.state).render()); // Добавили наш поисковик, а также передали лоакльное состояние state и вызвали его
         main.append(new CardList(this.appState, this.state).render())
         this.app.innerHTML = '';
